@@ -26,3 +26,82 @@
    <p>Расшифровка сообщений, зашифрованных шифром Цезаря с неизвестным ключом k , 0 < k < 32: </p>
    </p>а.ФХНЗКЧ - ПРИВЕТ (k =5)</body>p>
    </p>б.ЦЩЕБФ - ВЕСНА (k = 20)<p></p>
+
+</body> 
+   <h2> 21 января 2026 </h2>
+    <h1>Учебный RSA-шифр (p = 17, q = 19)</h1>
+
+  <div class="section">
+    <h2>Параметры алгоритма</h2>
+    <p><strong>p = 17</strong>, <strong>q = 19</strong> — простые числа</p>
+    <p><strong>n = p × q = 17 × 19 = 323</strong></p>
+    <p><strong>φ(n) = (p−1)(q−1) = 16 × 18 = 288</strong></p>
+    <p><strong>e = 5</strong> — открытая экспонента (НОД(5, 288) = 1)</p>
+    <p><strong>d = 173</strong> — закрытая экспонента (5 × 173 mod 288 = 1)</p>
+
+    <div class="keys">
+      <div>🔑 Открытый ключ: <code>(n=323, e=5)</code></div>
+      <div>🔒 Закрытый ключ: <code>(n=323, d=173)</code></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Попробуй сам!</h2>
+    <p>Введите число от <strong>1 до 322</strong> (должно быть &lt; n):</p>
+    <input type="number" id="inputValue" min="1" max="322" value="42" />
+
+    <br>
+    <button onclick="encrypt()">🔒 Зашифровать</button>
+    <button onclick="decrypt()">🔓 Расшифровать</button>
+
+    <div class="result" id="output">Результат появится здесь</div>
+    <p class="note">💡 Пример: 42 → зашифруется в 287 → расшифруется обратно в 42</p>
+  </div>
+
+  <script>
+    // Параметры RSA
+    const p = 17;
+    const q = 19;
+    const n = p * q;        // 323
+    const phi = (p - 1) * (q - 1); // 288
+    const e = 5;            // открытая экспонента
+    const d = 173;          // закрытая экспонента
+
+    // Быстрое возведение в степень по модулю (a^b mod m)
+    function modPow(base, exp, mod) {
+      if (mod === 1) return 0;
+      let result = 1;
+      base = base % mod;
+      while (exp > 0) {
+        if (exp % 2 === 1) {
+          result = (result * base) % mod;
+        }
+        exp = Math.floor(exp / 2);
+        base = (base * base) % mod;
+      }
+      return result;
+    }
+
+    function encrypt() {
+      const m = parseInt(document.getElementById('inputValue').value);
+      if (isNaN(m)  m < 1  m >= n) {
+        document.getElementById('output').innerText = '❌ Ошибка: введите число от 1 до 322!';
+        return;
+      }
+      const c = modPow(m, e, n);
+      document.getElementById('output').innerText = Зашифровано: ${m} → ${c};
+    }
+
+    function decrypt() {
+      const c = parseInt(document.getElementById('inputValue').value);
+      if (isNaN(c) || c < 0) {
+        document.getElementById('output').innerText = '❌ Ошибка: введите корректное число!';
+        return;
+      }
+      const m = modPow(c, d, n);
+      document.getElementById('output').innerText = Расшифровано: ${c} → ${m};
+    }
+  </script>
+
+</body>
+</html>
